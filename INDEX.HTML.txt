@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeFree — Learn C & Java Step-by-Step</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card-bg: #1e293b;
+      --panel-bg: #0f172a;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --java-color: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(11, 17, 32, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 span.c-accent { color: var(--accent); }
+    .hero h1 span.java-accent { color: var(--java-color); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h2.section-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+    }
+
+    /* Track Selector */
+    .track-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .track-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .track-btn.active.c-btn {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .track-btn.active.java-btn {
+      border-color: var(--java-color);
+      color: var(--java-color);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Lesson Viewer Layout */
+    .lesson-viewer {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 3.5rem;
+      min-height: 580px;
+    }
+
+    @media (max-width: 850px) {
+      .lesson-viewer {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar */
+    .lesson-sidebar {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border);
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .lesson-nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .lesson-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .lesson-nav-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .java-active .lesson-nav-btn.active {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--java-color);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Content Area */
+    .lesson-content {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .lesson-content h3 {
+      font-size: 1.6rem;
+    }
+
+    .lesson-description {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Code Box */
+    .code-container {
+      background: #050811;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0e1526;
+      border-bottom: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #7dd3fc;
+      overflow-x: auto;
+    }
+
+    /* Quiz Box */
+    .quiz-box {
+      background: #111a2d;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .quiz-box h4 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quiz-option {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--accent);
+    }
+
+    .quiz-option.correct {
+      background: rgba(34, 197, 94, 0.2) !important;
+      border-color: var(--success) !important;
+      color: var(--success);
+    }
+
+    .quiz-option.wrong {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: var(--danger) !important;
+      color: var(--danger);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: bold;
+      min-height: 1.2rem;
+    }
+
+    /* Compiler Embed Section */
+    .compiler-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .compiler-frame {
+      width: 100%;
+      height: 520px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">&lt;CodeFree /&gt;</a>
+    <nav>
+      <a href="#lessons">Interactive Lessons</a>
+      <a href="#compiler">Live Compiler</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Learn <span class="c-accent">C</span> & <span class="java-accent">Java</span> with Micro-Lessons</h1>
+    <p>Study interactive syntax walkthroughs, test your knowledge with quick quizzes, and run programs live in the compiler.</p>
+  </section>
+
+  <main class="container">
+
+    <!-- Track Selectors -->
+    <div class="track-tabs" id="lessons">
+      <button id="track-btn-c" class="track-btn active c-btn" onclick="selectTrack('c')">
+        📘 C Language Track
+      </button>
+      <button id="track-btn-java" class="track-btn java-btn" onclick="selectTrack('java')">
+        ☕ Java Track
+      </button>
+    </div>
+
+    <!-- Step-by-Step Lesson Viewer -->
+    <div class="lesson-viewer" id="lessonViewer">
+      <aside class="lesson-sidebar">
+        <div class="sidebar-title" id="sidebarTitle">C Modules</div>
+        <div id="moduleList" style="display:flex; flex-direction:column; gap:0.4rem;">
+          <!-- Dynamically populated module buttons -->
+        </div>
+      </aside>
+
+      <section class="lesson-content">
+        <div>
+          <h3 id="lessonTitle">Loading lesson...</h3>
+          <p id="lessonDesc" class="lesson-description"></p>
+        </div>
+
+        <!-- Syntax Example Box -->
+        <div class="code-container">
+          <div class="code-header">
+            <span id="codeLangTag">Syntax Example</span>
+            <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+          </div>
+          <pre><code id="codeBlock"></code></pre>
+        </div>
+
+        <!-- Quick Interactive Quiz -->
+        <div class="quiz-box">
+          <h4>🧠 Quick Check</h4>
+          <p id="quizQuestion" style="font-size:0.95rem; margin-bottom:0.75rem;"></p>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div id="quizFeedback" class="quiz-feedback"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Live Practice Compiler -->
+    <h2 class="section-title" id="compiler">Interactive In-Browser Compiler</h2>
+    <div class="compiler-section">
+      <p style="color: var(--text-muted);">
+        Paste code from the lesson above into the editor and hit <strong>Run</strong>:
+      </p>
+      <iframe id="ideFrame" class="compiler-frame" src="https://www.onlinegdb.com/online_c_compiler"></iframe>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; CodeFree. Open-access step-by-step programming education.</p>
+  </footer>
+
+  <script>
+    // Comprehensive lesson dataset for C and Java
+    const courseData = {
+      c: {
+        title: "C Modules",
+        compilerUrl: "https://www.onlinegdb.com/online_c_compiler",
+        lessons: [
+          {
+            title: "1. Structure & Hello World",
+            description: "Every C program begins execution in the main() function. The #include <stdio.h> directive imports standard Input/Output library functions like printf().",
+            code: `#include <stdio.h>
+
+int main() {
+    // printf writes formatted output to stdout
+    printf("Hello, World!\\n");
+    return 0; // 0 indicates successful execution
+}`,
+            quiz: {
+              question: "What does the 'return 0;' inside main() signify?",
+              options: [
+                "The program encountered an error",
+                "The program completed successfully",
+                "It prints '0' to the screen"
+              ],
+              correct: 1,
+              explanation: "Returning 0 to the operating system tells it the process finished execution without errors."
+            }
+          },
+          {
+            title: "2. Variables & Data Types",
+            description: "C is statically typed. You must declare variable types beforehand (int, float, double, char) and format specifiers like %d or %f are used to print them.",
+            code: `#include <stdio.h>
+
+int main() {
+    int age = 21;
+    float gpa = 3.85;
+    char grade = 'A';
+
+    printf("Age: %d | GPA: %.2f | Grade: %c\\n", age, gpa, grade);
+    return 0;
+}`,
+            quiz: {
+              question: "Which format specifier is used to print an integer in printf?",
+              options: ["%f", "%s", "%d"],
+              correct: 2,
+              explanation: "%d (or %i) format specifiers denote standard base-10 signed integers."
+            }
+          },
+          {
+            title: "3. Pointers & Addresses",
+            description: "A pointer is a variable that stores the memory address of another variable. '&' gets the memory address, while '*' dereferences the pointer to access the value.",
+            code: `#include <stdio.h>
+
+int main() {
+    int val = 42;
+    int *ptr = &val; // ptr stores address of val
+
+    printf("Value: %d\\n", val);
+    printf("Memory Address: %p\\n", ptr);
+    printf("Dereferenced: %d\\n", *ptr);
+    return 0;
+}`,
+            quiz: {
+              question: "What operator is used to extract the memory address of a variable?",
+              options: ["*", "&", "->"],
+              correct: 1,
+              explanation: "The '&' (address-of) operator retrieves the memory address of any variable."
+            }
+          }
+        ]
+      },
+      java: {
+        title: "Java Modules",
+        compilerUrl: "https://www.onlinegdb.com/online_java_compiler",
+        lessons: [
+          {
+            title: "1. Main Method & Classes",
+            description: "In Java, all code must reside inside a class. The standard entry point is 'public static void main(String[] args)'. System.out.println() prints lines to standard output.",
+            code: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java Developer!");
+    }
+}`,
+            quiz: {
+              question: "Why must the main method in Java be declared as 'static'?",
+              options: [
+                "So the JVM can invoke it without instantiating the class first",
+                "To make the code execute 2x faster",
+                "Because Java does not allow objects inside main"
+              ],
+              correct: 0,
+              explanation: "'static' allows the Java Virtual Machine (JVM) to invoke the method directly without constructing an object of the class."
+            }
+          },
+          {
+            title: "2. Control Flow & Conditionals",
+            description: "Java uses standard boolean logic structures like if/else-if/else blocks, switch statements, and ternary operators to branch execution.",
+            code: `public class Main {
+    public static void main(String[] args) {
+        int score = 85;
+
+        if (score >= 90) {
+            System.out.println("Grade: A");
+        } else if (score >= 80) {
+            System.out.println("Grade: B");
+        } else {
+            System.out.println("Grade: C or below");
+        }
+    }
+}`,
+            quiz: {
+              question: "What must every condition expression inside an 'if (...)' evaluate to in Java?",
+              options: ["An integer (0 or 1)", "A boolean (true or false)", "Any non-null object"],
+              correct: 1,
+              explanation: "Unlike C, Java does not treat integers as truthy/falsy; conditions strictly demand boolean values."
+            }
+          },
+          {
+            title: "3. Object-Oriented Basics",
+            description: "Java is centered around Objects and Classes. Classes contain fields (attributes) and methods (behavior), initialized using constructors.",
+            code: `class Car {
+    String model;
+    
+    // Constructor
+    Car(String model) {
+        this.model = model;
+    }
+
+    void drive() {
+        System.out.println(model + " is driving!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car("Electric Sedan");
+        myCar.drive();
+    }
+}`,
+            quiz: {
+              question: "Which keyword creates a new object instance in Java?",
+              options: ["alloc", "create", "new"],
+              correct: 2,
+              explanation: "The 'new' keyword allocates memory for a new object and invokes its constructor."
+            }
+          }
+        ]
+      }
+    };
+
+    let currentTrack = 'c';
+    let currentLessonIdx = 0;
+
+    function selectTrack(track) {
+      currentTrack = track;
+      currentLessonIdx = 0;
+
+      // Update button visual states
+      const cBtn = document.getElementById('track-btn-c');
+      const javaBtn = document.getElementById('track-btn-java');
+      const viewer = document.getElementById('lessonViewer');
+
+      if (track === 'c') {
+        cBtn.classList.add('active');
+        javaBtn.classList.remove('active');
+        viewer.classList.remove('java-active');
+      } else {
+        javaBtn.classList.add('active');
+        cBtn.classList.remove('active');
+        viewer.classList.add('java-active');
+      }
+
+      // Update Compiler Frame
+      document.getElementById('ideFrame').src = courseData[track].compilerUrl;
+
+      // Render module list
+      renderSidebar();
+      renderCurrentLesson();
+    }
+
+    function renderSidebar() {
+      const trackData = courseData[currentTrack];
+      document.getElementById('sidebarTitle').textContent = trackData.title;
+      const listContainer = document.getElementById('moduleList');
+      listContainer.innerHTML = '';
+
+      trackData.lessons.forEach((lesson, index) => {
+        const btn = document.createElement('button');
+        btn.className = `lesson-nav-btn ${index === currentLessonIdx ? 'active' : ''}`;
+        btn.innerHTML = `<span>${lesson.title}</span>`;
+        btn.onclick = () => {
+          currentLessonIdx = index;
+          renderSidebar();
+          renderCurrentLesson();
+        };
+        listContainer.appendChild(btn);
+      });
+    }
+
+    function renderCurrentLesson() {
+      const lesson = courseData[currentTrack].lessons[currentLessonIdx];
+      document.getElementById('lessonTitle').textContent = lesson.title;
+      document.getElementById('lessonDesc').textContent = lesson.description;
+      document.getElementById('codeBlock').textContent = lesson.code;
+      document.getElementById('codeLangTag').textContent = currentTrack === 'c' ? 'C Code' : 'Java Code';
+
+      // Load quiz
+      const quiz = lesson.quiz;
+      document.getElementById('quizQuestion').textContent = quiz.question;
+      const optsContainer = document.getElementById('quizOptions');
+      optsContainer.innerHTML = '';
+      const feedback = document.getElementById('quizFeedback');
+      feedback.textContent = '';
+
+      quiz.options.forEach((opt, idx) => {
+        const optBtn = document.createElement('button');
+        optBtn.className = 'quiz-option';
+        optBtn.textContent = opt;
+        optBtn.onclick = () => handleQuizAnswer(idx, quiz.correct, quiz.explanation, optBtn);
+        optsContainer.appendChild(optBtn);
+      });
+    }
+
+    function handleQuizAnswer(selectedIdx, correctIdx, explanation, clickedElement) {
+      const allOptions = document.querySelectorAll('.quiz-option');
+      allOptions.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('correct', 'wrong');
+      });
+
+      const feedback = document.getElementById('quizFeedback');
+      if (selectedIdx === correctIdx) {
+        clickedElement.classList.add('correct');
+        feedback.style.color = 'var(--success)';
+        feedback.textContent = '✓ Correct! ' + explanation;
+      } else {
+        clickedElement.classList.add('wrong');
+        allOptions[correctIdx].classList.add('correct');
+        feedback.style.color = 'var(--danger)';
+        feedback.textContent = '✕ Incorrect. ' + explanation;
+      }
+    }
+
+    function copyCode() {
+      const code = document.getElementById('codeBlock').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const copyBtn = document.querySelector('.copy-btn');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy Code', 2000);
+      });
+    }
+
+    // Initialize default view
+    selectTrack('c');
+  </script>
+</body>
+</html>
